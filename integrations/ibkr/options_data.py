@@ -25,7 +25,7 @@ def get_option_contracts(
 ) -> list[dict[str, Any]]:
     """Search for option contracts using IB's option chain API.
 
-    Returns a list of option contract dicts matching the Alpaca format.
+    Returns option contract dicts (symbol, type, strike, expiration, greeks).
     """
     stock = Stock(underlying_symbol, "SMART", "USD")
     ib.qualifyContracts(stock)

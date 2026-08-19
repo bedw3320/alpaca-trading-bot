@@ -12,7 +12,7 @@ log = get_logger(__name__)
 
 
 def get_account(ib: IB) -> dict[str, Any]:
-    """Get account info as a dict (same shape as former Alpaca version)."""
+    """Get account info as a dict from IBKR accountSummary tags."""
     log.info("IB get_account")
     summary = ib.accountSummary()
     if not summary:

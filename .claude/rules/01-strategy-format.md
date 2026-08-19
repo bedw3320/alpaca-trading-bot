@@ -11,7 +11,7 @@ Strategy files must conform to `schemas/strategy.py::StrategyConfig`.
 ### Available Data Sources
 - `ohlcv` - Price bars (timeframe, bars count)
 - `technicals` - Indicators: RSI, SMA, EMA, VWAP, MACD, BBANDS, ATR, VOLUME_RATIO
-- `news` - Tavily + Alpaca News (keywords, max_age_hours)
+- `news` - Tavily (keywords, max_age_hours)
 - `social` - Reddit + StockTwits (subreddits, keywords)
 - `options_flow` - Chain analysis (min_volume_ratio)
 - `web_search` - General web (queries)

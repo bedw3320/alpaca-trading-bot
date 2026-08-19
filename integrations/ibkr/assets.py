@@ -27,8 +27,8 @@ def list_assets(
 ) -> list[dict[str, Any]]:
     """List tradeable assets by class.
 
-    IB doesn't support bulk listing like Alpaca. For equities, this returns
-    an empty list — use symbol search instead. For crypto, returns known pairs.
+    IBKR has no bulk asset listing. Equities: empty list — look up symbols
+    individually. Crypto: known PAXOS pairs.
     """
     if asset_class == "crypto":
         return list_crypto_assets(ib)

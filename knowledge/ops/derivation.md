@@ -11,7 +11,7 @@ Domain: Options trading strategy research & execution
 - Connection patterns: claims link to sources, parameters link to backtests, strategies link to instruments
 - Growth: steady — manual research notes + occasional bot output capture
 - Output: refined strategy YAML files + agent context enrichment
-- Execution stack: Alpaca (paper/live), not IBKR/ORATS yet
+- Execution stack: Interactive Brokers via ib_insync (paper/live). ORATS still a possible data add-on, not the broker.
 - Curation style: manual-first, quality over quantity
 
 ## Dimension Positions

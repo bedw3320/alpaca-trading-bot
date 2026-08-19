@@ -135,3 +135,9 @@ def test_market_snapshot():
     )
     assert len(snap.tickers) == 2
     assert snap.tickers["AAPL"].latest_close == 150.0
+
+
+def test_aggregate_news_without_tavily():
+    from integrations.data.news import aggregate_news
+
+    assert aggregate_news(None, ["AAPL", "MSFT"]) == []

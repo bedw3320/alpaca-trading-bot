@@ -9,7 +9,7 @@ topics: ["[[screening-and-filters]]"]
 
 ORATS Data API ($399/year) provides pre-calculated skew parameters (slope, deriv), ATM vol, IV rank/percentile, and historical data back to 2007. This is optimal for systematic screening because the skew calculations are pre-computed rather than requiring real-time options chain parsing.
 
-Note: Currently staying on Alpaca execution stack, not migrating to IBKR/ORATS yet. ORATS would be a data source addition, not an execution change.
+Note: Execution is Interactive Brokers. ORATS would be a screening data source, not a broker change.
 
 ## Connections
 - [[skew percentile rank must be 75th or above on 1-year lookback for entry]]

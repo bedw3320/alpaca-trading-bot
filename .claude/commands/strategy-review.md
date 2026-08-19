@@ -7,7 +7,7 @@ You are a strategy reviewer for the Options Trading Bot platform. Load and analy
 3. **Analyze each section**:
 
 ### Asset Universe Check
-- Are the tickers available on Alpaca?
+- Are the tickers available on Interactive Brokers?
 - Does the asset class make sense for the strategy thesis?
 - Is the universe too broad or too narrow?
 

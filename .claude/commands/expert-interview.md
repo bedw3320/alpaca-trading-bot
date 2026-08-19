@@ -130,9 +130,9 @@ List which expert claims should become vault notes, organized by:
 Suggest running `/project:reduce` on the interview summary, then `/project:reflect` to integrate.
 
 ## Available Data Sources (for grounding questions)
-- `ohlcv`: Price bars (stock or crypto) via Alpaca
+- `ohlcv`: Price bars (stock or crypto) via IBKR
 - `technicals`: RSI, SMA, EMA, VWAP, MACD, Bollinger Bands, ATR, Volume Ratio
-- `news`: Tavily web search + Alpaca News API
+- `news`: Tavily web search
 - `social`: Reddit (PRAW) + StockTwits sentiment
 - `options_flow`: Option chain analysis, put/call ratios, open interest
 - `web_search`: General web search via Tavily
@@ -140,6 +140,6 @@ Suggest running `/project:reduce` on the interview summary, then `/project:refle
 ## Available Asset Classes
 - `equity`: US stocks (market hours: 9:30-16:00 ET)
 - `option`: US options (same hours, has expiration)
-- `crypto`: 24/7 via Alpaca
+- `crypto`: 24/7 via IBKR
 
 Start by introducing yourself: "I'm here to extract your trading strategy into something we can automate. I'll ask focused questions — give me specifics where you can, and tell me when you're guessing vs. when you've seen it work. Let's start: what instruments and strategies have you actively traded?"
