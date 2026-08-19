@@ -6,6 +6,8 @@ Paper first. Live only when you deliberately arm it.
 
 **Harness law:** [`LOOP.md`](LOOP.md) — read that before changing anything that can send an order.
 
+**Delivery plan:** [`ROADMAP.md`](ROADMAP.md) — walking paper-trading slices through the options edge platform.
+
 ## How it works
 
 You write a strategy as a YAML file:
