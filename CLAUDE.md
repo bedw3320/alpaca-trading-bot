@@ -2,6 +2,10 @@
 
 Multi-asset swing trading platform (stocks, options, crypto) powered by PydanticAI + Interactive Brokers.
 
+**Read `LOOP.md` first.** That file is harness law (planes, four constraints, current vs target). This file is the working map.
+
+Standalone runtime. No sibling personal repos. No shared secrets.
+
 ## Architecture
 
 ```
@@ -26,7 +30,7 @@ integrations/
     options_data.py         # Options chain, contracts
   data/                     # Data pipeline
     technicals.py           # pandas-ta indicators (RSI, SMA, VWAP, MACD, etc.)
-    news.py                 # Tavily + Alpaca News API
+    news.py                 # Tavily (primary); leftover optional Alpaca News is not the broker
     social.py               # Reddit (PRAW) + StockTwits sentiment
     options_flow.py         # Unusual volume, call/put ratios
   tavily/search.py          # Web search
@@ -78,6 +82,7 @@ Auto-loaded project rules (in `.claude/rules/`):
 - `00-project-context.md` - Architecture overview
 - `01-strategy-format.md` - Strategy YAML schema reference
 - `02-trading-safety.md` - Never trade live without explicit approval
+- `LOOP.md` (repo root) - Harness constitution — wins over the rules above on execution questions
 
 ## Key Concepts
 
@@ -85,15 +90,16 @@ Auto-loaded project rules (in `.claude/rules/`):
 Strategies are YAML files validated by `schemas/strategy.py::StrategyConfig`. Entry/exit conditions are **descriptive strings** (not executable code). The PydanticAI agent interprets them with judgment using pre-computed market data. See `strategies/_schema.yaml` for the full reference.
 
 ### Trading Safety
-- `TRADING_MODE=paper` (default) uses Alpaca paper trading
-- `TRADING_MODE=live` requires explicit opt-in via env var
-- `--allow-trading` flag must be passed to enable order execution
+- `TRADING_MODE=paper` (default) uses IB Gateway paper (port **4002**)
+- `TRADING_MODE=live` uses port **4001** and requires explicit opt-in
+- `--allow-trading` must be passed to enable order execution
 - Confidence threshold (default 0.75) gates trade execution
-- All decisions and orders logged to SQLite event store (`state/state.db`)
-- **Paper trade every strategy before considering live execution**
+- All decisions and orders logged to SQLite (`state/state.db`)
+- **Paper trade every strategy before considering live.** Do not arm live until `LOOP.md` constraints 1–2 (preview-token handshake + account-identity check) exist in code.
+- Agent `create_order` is still one-hop — a known gap. Do not add more one-hop paths.
 
 ### Agent Tools
-The PydanticAI agent has tools for: web search, account info, positions, orders, stock/crypto market data, options chains. Tools check `deps.allow_trading` before executing any trade.
+The PydanticAI agent has tools for: web search, account info, positions, orders, stock/crypto market data, options chains. Tools check `deps.allow_trading` before executing any trade. Broker I/O is `integrations/ibkr/` only.
 
 ## Development
 

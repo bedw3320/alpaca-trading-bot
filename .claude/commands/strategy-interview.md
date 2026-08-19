@@ -39,9 +39,9 @@ Key rules:
 4. Once approved, save to `strategies/active/` or `strategies/examples/`
 
 ## Available Data Sources
-- `ohlcv`: Price bars (stock or crypto) via Alpaca
+- `ohlcv`: Price bars (stock or crypto) via IBKR
 - `technicals`: RSI, SMA, EMA, VWAP, MACD, Bollinger Bands, ATR, Volume Ratio (via pandas-ta)
-- `news`: Tavily web search + Alpaca News API
+- `news`: Tavily web search
 - `social`: Reddit (PRAW) + StockTwits mentions and sentiment
 - `options_flow`: Option chain analysis, put/call ratios, open interest
 - `web_search`: General web search via Tavily
@@ -49,6 +49,6 @@ Key rules:
 ## Asset Classes
 - `equity`: US stocks (market hours: 9:30-16:00 ET)
 - `option`: US options (same hours, has expiration)
-- `crypto`: 24/7 via Alpaca
+- `crypto`: 24/7 via IBKR
 
 Start by asking: "Tell me about your trading idea. What's the basic thesis?"

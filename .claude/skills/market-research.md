@@ -4,7 +4,7 @@ You can research tickers, sectors, and market conditions using the data sources 
 
 ### Available Data Sources
 
-1. **Price Data** (`integrations/alpaca/market_data.py`)
+1. **Price Data** (`integrations/ibkr/market_data.py`)
    - `get_stock_bars(symbol, timeframe, bars)` - Stock OHLCV
    - `get_crypto_bars(symbol, timeframe, bars)` - Crypto OHLCV
    - `get_stock_quote(symbol)` - Latest bid/ask
@@ -16,7 +16,7 @@ You can research tickers, sectors, and market conditions using the data sources 
 
 3. **News** (`integrations/data/news.py`)
    - `aggregate_news(tavily_client, symbols, keywords=[], max_results=10)`
-   - Sources: Tavily web search + Alpaca News API
+   - Sources: Tavily web search (primary)
 
 4. **Social Sentiment** (`integrations/data/social.py`)
    - `search_reddit(keywords, subreddits=[], limit=25)`

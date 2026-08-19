@@ -1,12 +1,14 @@
 # Options Trading Bot
 
-A multi-asset swing trading platform that lets you describe trading strategies in plain English, poke holes in them, and then execute them — all through an AI agent with real market tools.
+A multi-asset swing trading runtime (stocks, options, crypto) that lets you describe strategies in YAML, run them through a PydanticAI agent, and execute on **Interactive Brokers**.
 
-Stocks. Options. Crypto. Paper trade first, go live when you're ready.
+Paper first. Live only when you deliberately arm it.
 
-## How It Works
+**Harness law:** [`LOOP.md`](LOOP.md) — read that before changing anything that can send an order.
 
-You write a strategy as a simple YAML file:
+## How it works
+
+You write a strategy as a YAML file:
 
 ```yaml
 name: hype-volume-options
@@ -23,138 +25,112 @@ entry:
   min_conditions_met: 2
 ```
 
-The bot reads the strategy, fetches the data it needs, and hands everything to a PydanticAI agent that decides whether to trade. Entry/exit conditions are natural language — the AI interprets them with judgment, not rigid if/else logic.
+The runner loads the strategy, fetches the data it needs, and hands everything to a PydanticAI agent that decides whether to trade. Entry/exit conditions are natural language — the agent interprets them with judgment, not rigid if/else.
 
-Every decision gets logged. Every order gets tracked. Nothing goes live without your say-so.
+Every decision is logged to SQLite. Orders require `--allow-trading`. Nothing goes live without `TRADING_MODE=live` **and** that flag.
 
-## Quick Start
+## Quick start
 
 ```bash
-# Clone and install
 git clone https://github.com/bedw3320/options-trading-bot.git
 cd options-trading-bot
 uv sync
 
-# Set up your keys
 cp .env.example .env
-# Edit .env with your API keys (Alpaca, Anthropic, etc.)
+# TWS_USERID / TWS_PASSWORD, ANTHROPIC_API_KEY, TRADING_MODE=paper
 
-# Run with an example strategy (paper mode, no live trades)
-uv run python main.py --strategy strategies/examples/sol-momentum.yaml
+# Gateway + agent (paper port 4002)
+docker compose up
 
-# Run tests
+# Or Gateway already running on the Mini:
+TRADING_MODE=paper uv run python main.py --strategy strategies/examples/sol-momentum.yaml
+
 uv run pytest tests/ -v
 ```
 
-## What's In The Box
+Without `--allow-trading`, the loop researches and journals. It does not send.
 
-**Strategy System** — YAML files validated by Pydantic. Write conditions in plain English, reference any data source, set your risk params. The schema catches mistakes before they cost you money.
+## What’s in the box
 
-**Multi-Asset Trading** — Stocks, options, and crypto through the Alpaca SDK (`alpaca-py`). Paper/live toggle via a single env var.
+**IBKR execution** — `ib_insync` wrappers under `integrations/ibkr/`. Docker image `gnzsnz/ib-gateway` in `docker-compose.yml` (paper **4002**, live **4001**).
 
-**Data Pipeline** — Technical indicators (RSI, MACD, Bollinger Bands, 130+ via `pandas-ta`), news aggregation (Tavily + Alpaca News), social sentiment (Reddit + StockTwits), and options flow analysis. All wired into the runner and injected into agent context automatically based on strategy `data_requirements`.
+**Strategy system** — YAML validated by Pydantic. Conditions are descriptive strings. Schema mistakes fail before they cost money.
 
-**AI Agent** — PydanticAI agent with tools for market data, account management, order execution, and web search. Structured outputs with confidence scoring — won't trade unless it's confident enough.
+**Data pipeline** — Technicals (`pandas-ta`), news (Tavily; leftover optional Alpaca News in `integrations/data/news.py` is not the broker), social (Reddit + StockTwits), options flow. Injected from `data_requirements`.
 
-**Risk Controls** — Daily trade limits, per-position size caps, and total portfolio exposure limits enforced in code before any order is placed. Breaches are logged as `risk_blocked` events.
+**AI agent** — PydanticAI tools for market data, account, positions, orders. Structured `AgentResult` + `OrderIntent`. Confidence gate (default 0.75).
 
-**State Management** — SQLite with WAL mode. Append-only event log of every decision, order, risk block, and reconciliation. Fully auditable.
+**Risk in code** — Daily trade limit, per-position cap, total exposure cap in `core/runner.py`. Breaches log as `risk_blocked`.
 
-**Claude Code Integration** — Custom commands for strategy design, review, and monitoring. Open the project in Claude Code and run `/project:strategy-interview` to design a strategy conversationally.
+**State** — SQLite WAL. Append-only event log of decisions, orders, risk blocks, errors.
 
-## Strategies
-
-Strategies live in `strategies/` as YAML files:
-
-```
-strategies/
-  examples/
-    sol-momentum.yaml          # News-driven crypto (ported from original bot)
-    hype-volume-options.yaml   # Social hype -> options flow -> momentum
-  active/                      # Drop strategies here to run them
-  _schema.yaml                 # Full reference of all fields
-```
-
-A strategy defines: what to trade, when to check, what data to fetch, when to enter/exit, and how much risk to take. See `_schema.yaml` for every available field.
-
-**Key design decision**: Conditions are descriptive strings, not code. The AI agent interprets "RSI(14) crosses above 30 from oversold territory" using pre-computed indicator data and its own judgment. This keeps strategies readable, auditable, and git-diffable.
+**Cursor / Claude** — `AGENTS.md` + `LOOP.md` for Cursor. Slash commands under `.claude/commands/` for strategy interview/review/status.
 
 ## Configuration
 
-Copy `.env.example` to `.env` and fill in your keys:
+Copy `.env.example` to `.env`:
 
 | Variable | Required | Description |
-|----------|----------|-------------|
-| `ALPACA_KEY` | Yes | Alpaca API key |
-| `ALPACA_SECRET` | Yes | Alpaca API secret |
-| `ANTHROPIC_API_KEY` | Yes | For the AI agent |
-| `TRADING_MODE` | No | `paper` (default) or `live` |
-| `TAVILY_API_KEY` | No | Web search for news |
-| `REDDIT_CLIENT_ID` | No | Social sentiment |
-| `REDDIT_CLIENT_SECRET` | No | Social sentiment |
+|---|---|---|
+| `TWS_USERID` | Yes (compose) | IBKR username for the Gateway container |
+| `TWS_PASSWORD` | Yes (compose) | IBKR password for the Gateway container |
+| `TRADING_MODE` | No | `paper` (default, port 4002) or `live` (port 4001) |
+| `IB_GATEWAY_HOST` | No | Default `ib-gateway` in compose, `127.0.0.1` locally |
+| `IB_GATEWAY_PORT` | No | Default 4002 paper / 4001 live |
+| `IB_CLIENT_ID` | No | Default `1` |
+| `ANTHROPIC_API_KEY` | Yes (agent) | Model key |
+| `TAVILY_API_KEY` | No | Web/news search |
+| `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` | No | Social sentiment |
 
 ## Safety
 
-This bot defaults to doing nothing dangerous:
+- **Paper by default** — `TRADING_MODE=paper`
+- **Trading disabled by default** — pass `--allow-trading` (or `ALLOW_TRADING=true`) to send
+- **Live is dual-gate** — `TRADING_MODE=live` **and** `--allow-trading`
+- **Confidence gating** — below strategy threshold → no trade
+- **Risk controls in code** — not just in the prompt
+- **Market hours** — strategies only run in their configured sessions
+- **Everything logged** — agent output, orders, `risk_blocked`
+- **Known gaps** — one-hop `create_order`; Gateway identity not verified against account id. See `LOOP.md`. Do not arm live until those close.
 
-- **Paper trading by default** — `TRADING_MODE=paper` unless you explicitly change it
-- **Trading disabled by default** — pass `--allow-trading` to enable order execution
-- **Confidence gating** — the agent won't trade below the strategy's confidence threshold (default 0.75)
-- **Risk controls enforced in code** — daily trade limits, position sizing caps, and total exposure limits are checked before every order (not just in prompts)
-- **Market hours awareness** — strategies only run during their configured trading sessions
-- **Everything is logged** — every agent decision, order, and risk block goes to the SQLite event store
-- **Graceful error handling** — API failures are caught, logged, and the bot continues running
-- **Strategies are code** — YAML files in git, fully diffable and reviewable
-
-## Claude Code Commands
-
-If you use [Claude Code](https://docs.anthropic.com/en/docs/claude-code), this project comes with custom slash commands:
+## Commands
 
 | Command | What it does |
-|---------|-------------|
-| `/project:strategy-interview` | Walk through designing a new strategy — captures your idea, asks probing questions, finds weaknesses, generates validated YAML |
-| `/project:strategy-review` | Audit an existing strategy for logical gaps and risk issues |
-| `/project:status` | Dashboard showing positions, P&L, and recent trades |
-| `/project:backtest-plan` | Generate a backtest specification for a strategy |
+|---|---|
+| `/project:strategy-interview` | Design a strategy conversationally → validated YAML |
+| `/project:strategy-review` | Audit an existing strategy |
+| `/project:status` | Positions, P&L, recent events |
+| `/project:backtest-plan` | Backtest spec for a strategy |
 
-## Tech Stack
+## Stack
 
-| Component | Choice | Why |
-|-----------|--------|-----|
-| Trading | `alpaca-py` | Official SDK, typed, multi-asset |
-| AI Agent | PydanticAI | Structured outputs, tool system, dependency injection |
-| Technicals | `pandas-ta` | Pure Python, 130+ indicators, no C deps |
-| Social | PRAW + StockTwits | Free APIs for Reddit + stock sentiment |
-| Strategies | YAML + Pydantic | Human-readable, machine-parseable, git-diffable |
-| State | SQLite | WAL mode, append-only event log |
-| Model | Claude (configurable) | Any PydanticAI-compatible provider works |
+| Component | Choice |
+|---|---|
+| Broker | Interactive Brokers via `ib_insync` + IB Gateway |
+| AI agent | PydanticAI |
+| Technicals | `pandas-ta` |
+| Social | PRAW + StockTwits |
+| Strategies | YAML + Pydantic |
+| State | SQLite WAL, append-only events |
+| Model | Claude (any PydanticAI provider spec) |
 
-## Project Structure
+## Layout
 
 ```
+LOOP.md                          # Harness constitution (read first)
+AGENTS.md                        # Cursor / agent entry
 main.py                          # Entry point
-core/
-  agent.py                       # PydanticAI agent + all tools
-  runner.py                      # Strategy evaluation loop (market hours, data pipeline, risk controls)
-  strategy_loader.py             # YAML -> validated StrategyConfig
-  prompt_builder.py              # Strategy + market data -> agent prompt
-  market_hours.py                # Market session awareness (regular, extended, 24/7)
-schemas/
-  strategy.py                    # StrategyConfig Pydantic model
-  output.py                      # AgentResult, OrderIntent
-  market.py                      # MarketSnapshot, TickerSnapshot
-integrations/
-  alpaca/                        # SDK wrappers (account, orders, positions, market data, options)
-  data/                          # Technicals, news, social sentiment, options flow
-strategies/                      # Your trading strategies (YAML)
+core/                            # Agent, runner, strategy loader
+schemas/                         # StrategyConfig, OrderIntent, AgentResult
+integrations/ibkr/               # Gateway client, account, orders, market data
+integrations/data/               # Technicals, news, social, options flow
+strategies/                      # YAML (examples/ + active/)
+utils/state.py                   # SQLite event store
+docker-compose.yml               # ib-gateway + agent
 ```
 
-## Contributing
-
-Fork it, break it, make it better. PRs welcome.
-
-This started as a minimal SOL crypto bot and grew into a multi-asset platform. The framework is designed to support any strategy — the ones included are just examples to get you started.
+Historical notes under `knowledge/` may still mention Alpaca. Execution is IBKR as of 2026-03-28.
 
 ---
 
-*Paper trade everything. Twice. Then maybe consider going live.*
+*Paper trade everything. Twice. Then maybe consider going live — and only after `LOOP.md` constraints 1–2 exist in code.*

@@ -28,7 +28,7 @@ You analyze portfolio risk against strategy parameters and flag potential breach
 ### Data Sources
 - Portfolio positions: `utils/state.py::load_state(db_path, state_key)`
 - Strategy parameters: Load from `strategies/active/` YAML files
-- Account info: `integrations/alpaca/account.py::get_account()`
+- Account info: `integrations/ibkr/account.py::get_account()`
 
 ### Output Format
 ```
