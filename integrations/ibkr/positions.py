@@ -25,7 +25,7 @@ def _classify_contract(contract) -> str:
 
 
 def list_positions(ib: IB) -> list[dict[str, Any]]:
-    """List all open positions as dicts (same shape as former Alpaca version)."""
+    """List all open positions as dicts."""
     log.info("IB list_positions")
     positions = ib.positions()
     result = []

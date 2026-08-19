@@ -1,15 +1,16 @@
 ---
-description: "Open: verify Alpaca supports multi-leg combo orders for risk reversals (2-3 legs including protection put)"
+description: "Open: verify IBKR combo (BAG) orders for 2-3 leg risk reversals including a protection put"
 category: open-question
 created: 2026-02-20
+updated: 2026-08-19
 source: "research_v0_ Options Risk Reversal Strategy.md"
 confidence: experimental
 topics: ["[[open-questions]]"]
 ---
 
-Unresolved: confirm that the current execution broker (Alpaca) supports combo orders for 2-3 leg options structures. Risk reversals require simultaneous execution of the short put and long call; defined-risk versions add a third leg (protection put). If Alpaca doesn't support combo orders, may need to leg in sequentially with slippage risk.
+Unresolved: confirm `ib_insync` combo / BAG orders for 2-3 leg options structures on Interactive Brokers. Risk reversals need the short put and long call filled together; defined-risk versions add a third leg (protection put). If combo orders are not wired in `integrations/ibkr/orders.py` yet, legging in sequentially means slippage risk.
 
-The research document originally referenced IBKR TWS API via ib_insync for combo orders, but we're staying on Alpaca for now.
+IBKR TWS supports combo contracts. This repo's order path is still single-leg (`MarketOrder` / `LimitOrder` on one contract). That is the gap — not a broker choice.
 
 ## Connections
 - [[the zero-cost calibration algorithm starts at 20-delta put and finds the call strike matching the credit]]

@@ -30,7 +30,7 @@ integrations/
     options_data.py         # Options chain, contracts
   data/                     # Data pipeline
     technicals.py           # pandas-ta indicators (RSI, SMA, VWAP, MACD, etc.)
-    news.py                 # Tavily (primary); leftover optional Alpaca News is not the broker
+    news.py                 # Tavily
     social.py               # Reddit (PRAW) + StockTwits sentiment
     options_flow.py         # Unusual volume, call/put ratios
   tavily/search.py          # Web search

@@ -42,4 +42,4 @@ Until constraints 1–2 ship in code, do not arm live. Paper with `--allow-tradi
 
 ## Isolation
 
-No shared env files, Cursor environment wiring, or knowledge imports from any other personal repo. Trading knowledge lives in `knowledge/` here. Historical vault notes may still mention Alpaca — that is archive, not the execution stack.
+No shared env files, Cursor environment wiring, or knowledge imports from any other personal repo. Trading knowledge lives in `knowledge/` here.

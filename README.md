@@ -56,7 +56,7 @@ Without `--allow-trading`, the loop researches and journals. It does not send.
 
 **Strategy system** — YAML validated by Pydantic. Conditions are descriptive strings. Schema mistakes fail before they cost money.
 
-**Data pipeline** — Technicals (`pandas-ta`), news (Tavily; leftover optional Alpaca News in `integrations/data/news.py` is not the broker), social (Reddit + StockTwits), options flow. Injected from `data_requirements`.
+**Data pipeline** — Technicals (`pandas-ta`), news (Tavily), social (Reddit + StockTwits), options flow (IBKR chain). Injected from `data_requirements`.
 
 **AI agent** — PydanticAI tools for market data, account, positions, orders. Structured `AgentResult` + `OrderIntent`. Confidence gate (default 0.75).
 
@@ -128,8 +128,6 @@ strategies/                      # YAML (examples/ + active/)
 utils/state.py                   # SQLite event store
 docker-compose.yml               # ib-gateway + agent
 ```
-
-Historical notes under `knowledge/` may still mention Alpaca. Execution is IBKR as of 2026-03-28.
 
 ---
 

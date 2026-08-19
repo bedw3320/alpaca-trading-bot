@@ -16,7 +16,7 @@ You can research tickers, sectors, and market conditions using the data sources 
 
 3. **News** (`integrations/data/news.py`)
    - `aggregate_news(tavily_client, symbols, keywords=[], max_results=10)`
-   - Sources: Tavily web search (primary)
+   - Sources: Tavily
 
 4. **Social Sentiment** (`integrations/data/social.py`)
    - `search_reddit(keywords, subreddits=[], limit=25)`
