@@ -1,6 +1,6 @@
 ## Trading Safety Rules
 
-See `LOOP.md` for the four harness constraints. This file is the operational checklist.
+See `LOOP.md` for first principles and the four harness constraints. This file is the operational checklist.
 
 ### NEVER
 - Never execute live trades without the user explicitly setting `TRADING_MODE=live` AND `--allow-trading`

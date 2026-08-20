@@ -4,6 +4,40 @@ This repository is the entire trading runtime. Do not import, submodule, or shar
 
 This file is **harness law**, not strategy. Strategy YAML comes later.
 
+## First principles
+
+Stable epistemic and safety law. Do not edit this section without explicit user approval. The four constraints below implement principles 1–3 in the current runtime; they are not a competing list.
+
+1. **Agents propose; deterministic code decides what can execute.**
+   Models never bypass sizing, risk, identity, or order validation.
+
+2. **Fail closed when reality is uncertain.**
+   Missing or stale data, broker mismatch, disconnect, or reconciliation drift means no new exposure.
+
+3. **IBKR is authoritative for broker state.**
+   Reconcile positions, orders, fills, and balances before every decision cycle.
+
+4. **Every decision must be reproducible as-of its timestamp.**
+   Preserve inputs, versions, sources, freshness, reasoning, and constraints without future leakage.
+
+5. **Abstention is a first-class successful outcome.**
+   The system is rewarded for calibrated decisions, not trading activity.
+
+6. **Every claimed edge must be falsifiable.**
+   Define the hypothesis, expected mechanism, evaluation horizon, invalidation, and decay signals before promotion.
+
+7. **Learning occurs through versioned experiments, never uncontrolled self-modification.**
+   Replay → shadow → independent paper cohort → explicit promotion or rejection.
+
+8. **Paper and live use the same execution path.**
+   Only account identity, arming state, and limits differ; there is no untested live-only code.
+
+9. **Complexity must earn its place through measurable lift.**
+   Every agent, signal, and data source is compared against a simpler baseline.
+
+10. **The audit dataset is a primary product.**
+    Trades, abstentions, rejected candidates, counterfactuals, failures, and experiments are preserved as compounding proprietary IP.
+
 ## Planes
 
 | Plane | Where | Allowed to |

@@ -4,7 +4,7 @@ Standalone Interactive Brokers trading runtime. Not part of any other personal r
 
 ## Read first
 
-1. `LOOP.md` — harness law (planes, four constraints, current vs target)
+1. `LOOP.md` — first principles and harness law (planes, four constraints, current vs target)
 2. `CLAUDE.md` — file map, commands, how to run
 3. `.claude/rules/02-trading-safety.md` — live-trading gates
 

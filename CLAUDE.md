@@ -2,7 +2,7 @@
 
 Multi-asset swing trading platform (stocks, options, crypto) powered by PydanticAI + Interactive Brokers.
 
-**Read `LOOP.md` first.** That file is harness law (planes, four constraints, current vs target). This file is the working map.
+**Read `LOOP.md` first.** That file is first principles and harness law (planes, four constraints, current vs target). This file is the working map.
 
 Standalone runtime. No sibling personal repos. No shared secrets.
 

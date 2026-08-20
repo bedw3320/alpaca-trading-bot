@@ -21,15 +21,11 @@ improvements are tested before promotion.
 
 ## Delivery principles
 
+See [`LOOP.md`](LOOP.md) **First principles** for stable epistemic and safety law. This roadmap adds delivery sequence only:
+
 - Build walking vertical slices and fire paper trades early.
 - End every epic with an observable demo.
-- Agents own judgment. Deterministic code owns facts, calculations, risk, execution,
-  reconciliation, and state transitions.
 - Use just-in-time research spikes only when an epic reaches a real uncertainty.
-- Start with a single-agent baseline. Multi-agent specialization must demonstrate
-  measurable lift before becoming part of the runtime.
-- Keep live trading disarmed until operational and epistemic reliability are proven.
-- `LOOP.md` is harness law.
 
 ## Delivery sequence
 
